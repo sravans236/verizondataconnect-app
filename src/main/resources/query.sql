@@ -1,0 +1,37 @@
+CREATE TABLE "SALES" (
+    "ID" NUMBER NOT NULL ENABLE,
+    "ITEM" VARCHAR2(50 BYTE) NOT NULL ENABLE,
+    "QUANTITY" NUMBER(*,0) NOT NULL ENABLE,
+    "AMOUNT" FLOAT(126) NOT NULL ENABLE,
+    CONSTRAINT "SALES_PK" PRIMARY KEY ("ID")
+);
+
+INSERT INTO
+	SALES (ID, ITEM, QUANTITY, AMOUNT)
+VALUES
+  	(11,'DataCard', 1, 10.00);
+
+INSERT INTO
+	SALES (ID, ITEM, QUANTITY, AMOUNT)
+VALUES
+  	(12,'DataCard', 1, 12.00);
+
+INSERT INTO
+	SALES (ID, ITEM, QUANTITY, AMOUNT)
+VALUES
+  	(13,'DataCard', 1, 13.00);
+
+select * from SALES;
+
+CREATE SEQUENCE "SALE_SEQUENCE" MINVALUE 1 MAXVALUE 100000 INCREMENT BY 1 START WITH 1;
+
+CREATE TRIGGER "SYSTEM"."SALE_PRIMARY_KEY_TRG"
+   before insert on "SYSTEM"."SALES"
+   for each row
+begin
+   if inserting then
+      if :NEW."ID" is null then
+         select SALE_SEQUENCE.nextval into :NEW."ID" from dual;
+      end if;
+   end if;
+end;
